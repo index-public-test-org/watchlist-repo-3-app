@@ -1,0 +1,20 @@
+name: Trigger GitHub Index Update
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-index-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Index Update Workflow
+        env:
+          GH_TOKEN: ${{ secrets.GH_INDEX_REPO_TRIGGER_PAT }}
+        run: |
+          gh workflow run process-event.yml --repo ${{ secrets.GH_INDEX_REPO_URL }}             -f event_type="observe-commit"             -f event_payload='{
+              "repository": "${{ github.repository }}",
+              "commit": "${{ github.sha }}",
+              "timestamp": "${{ github.event.head_commit.timestamp }}"
+            }'
