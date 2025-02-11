@@ -12,17 +12,29 @@ jobs:
       - name: Check Commit Message
         id: check_commit
         run: |
-          # Get the commit message
+          # Get the commit message and author email
           COMMIT_MSG="${{ github.event.head_commit.message }}"
+          COMMIT_AUTHOR="${{ github.event.head_commit.author.email }}"
           echo "Commit message: $COMMIT_MSG"
+          echo "Commit author: $COMMIT_AUTHOR"
+          
+          # Check if commit is from GitHub Actions
+          if [ "$COMMIT_AUTHOR" = "actions@github.com" ]; then
+            echo "Commit is from GitHub Actions - skipping index update trigger"
+            echo "skip_trigger=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Extract JSON part (everything between first { and last })
+          JSON_PART=$(echo "$COMMIT_MSG" | sed -n '/{/,/}/p')
           
           # Try to parse as JSON and check if it's valid
-          if echo "$COMMIT_MSG" | jq -e . >/dev/null 2>&1; then
+          if [ ! -z "$JSON_PART" ] && echo "$JSON_PART" | jq -e . >/dev/null 2>&1; then
             echo "Commit Message JSON Payload:"
-            echo "$COMMIT_MSG" | jq '.'
+            echo "$JSON_PART" | jq '.'
             
             # Check if skip_trigger is true
-            if echo "$COMMIT_MSG" | jq -e '.skip_trigger == true' >/dev/null 2>&1; then
+            if echo "$JSON_PART" | jq -e '.skip_trigger == true' >/dev/null 2>&1; then
               echo "skip_trigger found in commit message JSON - skipping index update trigger"
               echo "skip_trigger=true" >> $GITHUB_OUTPUT
             else
