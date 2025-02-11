@@ -1,15 +1,15 @@
 {
-  "originHash" : "ae14705749ddfaf5c87615e0f2271033bc75d91b970afaba3600a6da6847ab50",
-  "pins" : [
+  "originHash": "ae14705749ddfaf5c87615e0f2271033bc75d91b970afaba3600a6da6847ab50",
+  "pins": [
     {
-      "identity" : "watchlist-repo-2",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/index-public-test-org/watchlist-repo-2.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "2d3acb396483a8c75364203fdc37837d24215544"
+      "identity": "watchlist-repo-2",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/index-public-test-org/watchlist-repo-2.git",
+      "state": {
+        "branch": "master",
+        "revision": "a3ee8067c1899dcea4c3ba8e208b6259467c657f"
       }
     }
   ],
-  "version" : 3
+  "version": 3
 }
