@@ -23,27 +23,7 @@ jobs:
             echo "Commit is from GitHub Actions - skipping index update trigger"
             echo "skip_trigger=true" >> $GITHUB_OUTPUT
             exit 0
-          fi
-          
-          # Extract JSON part (everything between first { and last })
-          JSON_PART=$(echo "$COMMIT_MSG" | sed -n '/{/,/}/p')
-          
-          # Try to parse as JSON and check if it's valid
-          if [ ! -z "$JSON_PART" ] && echo "$JSON_PART" | jq -e . >/dev/null 2>&1; then
-            echo "Commit Message JSON Payload:"
-            echo "$JSON_PART" | jq '.'
-            
-            # Check if skip_trigger is true
-            if echo "$JSON_PART" | jq -e '.skip_trigger == true' >/dev/null 2>&1; then
-              echo "skip_trigger found in commit message JSON - skipping index update trigger"
-              echo "skip_trigger=true" >> $GITHUB_OUTPUT
-            else
-              echo "skip_trigger=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "No valid JSON found in commit message"
-            echo "skip_trigger=false" >> $GITHUB_OUTPUT
-          fi
+          fi            
 
       - name: Trigger Index Update Workflow
         if: steps.check_commit.outputs.skip_trigger != 'true'
